@@ -2,7 +2,12 @@
 
 A Model Context Protocol (MCP) server that gives Claude the ability to search for cheap flights — including Russian airlines — and present direct booking links.
 
-Built on top of [fli](https://github.com/punitarani/fli) with an extended fare search layer covering domestic and CIS routes.
+---
+
+## Preview
+
+
+![FlightHunter in Claude](images/screenshot1.png)
 
 ---
 
@@ -30,13 +35,13 @@ Built on top of [fli](https://github.com/punitarani/fli) with an extended fare s
 
 ## Installation
 
-### 1. Install `fli` via uv
+### 1. Install the base package via uv
 
 ```bash
 uv tool install flights
 ```
 
-### 2. Find your fli install path
+### 2. Find your install path
 
 ```bash
 SITE=$(find ~/.local -path "*/site-packages/fli" -type d | head -1)
@@ -52,7 +57,14 @@ cp fare_search.py "$SITE/search/fare_search.py"
 cp server.py "$SITE/mcp/server.py"
 ```
 
-### 4. Configure Claude Desktop
+### 4. Install the FlightHunter launcher
+
+```bash
+cp flighthunter-mcp /Users/YOUR_USERNAME/.local/bin/flighthunter-mcp
+chmod +x /Users/YOUR_USERNAME/.local/bin/flighthunter-mcp
+```
+
+### 5. Configure Claude Desktop
 
 Open your Claude Desktop config:
 
@@ -70,16 +82,14 @@ Add the following (replace `YOUR_USERNAME` with your macOS username):
 {
   "mcpServers": {
     "FlightHunter": {
-      "command": "/Users/YOUR_USERNAME/.local/bin/fli-mcp",
+      "command": "/Users/YOUR_USERNAME/.local/bin/flighthunter-mcp",
       "args": []
     }
   }
 }
 ```
 
-> **Tip:** Find the exact path to `fli-mcp` by running `which fli-mcp` in your terminal.
-
-### 5. Restart Claude Desktop
+### 6. Restart Claude Desktop
 
 Quit and reopen Claude Desktop. The FlightHunter tools will appear automatically.
 
@@ -105,7 +115,7 @@ What are the cheapest travel dates from LED to BCN in May?
 Find round-trip flights from JFK to LHR next month
 ```
 
-Claude will return results sorted by price with direct booking links where available.
+Claude will return results sorted by price with direct booking links.
 
 ---
 
@@ -128,14 +138,12 @@ Google Flights    Fare Search Engine
 
 ## Optional Configuration
 
-You can customize behavior via environment variables in your Claude config:
-
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `FLI_MCP_DEFAULT_CURRENCY` | Currency code for results | `USD` |
-| `FLI_MCP_DEFAULT_PASSENGERS` | Default passenger count | `1` |
-| `FLI_MCP_MAX_RESULTS` | Max results returned | unlimited |
-| `FLI_MCP_DEFAULT_CABIN_CLASS` | Default cabin class | `ECONOMY` |
+| `FLIGHTHUNTER_CURRENCY` | Currency code for results | `USD` |
+| `FLIGHTHUNTER_PASSENGERS` | Default passenger count | `1` |
+| `FLIGHTHUNTER_MAX_RESULTS` | Max results returned | unlimited |
+| `FLIGHTHUNTER_CABIN_CLASS` | Default cabin class | `ECONOMY` |
 
 Example:
 
@@ -143,11 +151,11 @@ Example:
 {
   "mcpServers": {
     "FlightHunter": {
-      "command": "/Users/YOUR_USERNAME/.local/bin/fli-mcp",
+      "command": "/Users/YOUR_USERNAME/.local/bin/flighthunter-mcp",
       "args": [],
       "env": {
-        "FLI_MCP_DEFAULT_CURRENCY": "RUB",
-        "FLI_MCP_MAX_RESULTS": "20"
+        "FLIGHTHUNTER_CURRENCY": "RUB",
+        "FLIGHTHUNTER_MAX_RESULTS": "20"
       }
     }
   }

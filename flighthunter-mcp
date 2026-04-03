@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""FlightHunter MCP — launcher script."""
+import sys
+from fli.mcp.server import run
+
+if __name__ == "__main__":
+    sys.exit(run())
