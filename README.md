@@ -16,6 +16,9 @@ Built on top of [fli](https://github.com/punitarani/fli) with an extended fare s
 - ⚡ Works inside Claude Desktop — just ask naturally
 
 ---
+## Preview
+
+![FlightHunter в Claude](images/screenshot1.png)
 
 ## Requirements
 
