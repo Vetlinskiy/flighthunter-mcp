@@ -28,39 +28,14 @@ A Model Context Protocol (MCP) server that gives Claude the ability to search fo
 
 ## Installation
 
-### 1. Install the base package via uv
-
+### 1. Install FlightHunter via uv
 ```bash
-uv tool install flights
+uv tool install flighthunter-mcp
 ```
 
-### 2. Find your install path
-
-```bash
-SITE=$(find ~/.local -path "*/site-packages/fli" -type d | head -1)
-echo $SITE
-```
-
-### 3. Install FlightHunter files
-
-Download `fare_search.py` and `server.py` from this repo, then:
-
-```bash
-cp fare_search.py "$SITE/search/fare_search.py"
-cp server.py "$SITE/mcp/server.py"
-```
-
-### 4. Install the FlightHunter launcher
-
-```bash
-cp flighthunter-mcp /Users/YOUR_USERNAME/.local/bin/flighthunter-mcp
-chmod +x /Users/YOUR_USERNAME/.local/bin/flighthunter-mcp
-```
-
-### 5. Configure Claude Desktop
+### 2. Configure Claude Desktop
 
 Open your Claude Desktop config:
-
 ```bash
 # macOS
 nano ~/Library/Application\ Support/Claude/claude_desktop_config.json
@@ -69,23 +44,21 @@ nano ~/Library/Application\ Support/Claude/claude_desktop_config.json
 nano ~/.config/Claude/claude_desktop_config.json
 ```
 
-Add the following (replace `YOUR_USERNAME` with your macOS username):
-
+Add the following:
 ```json
 {
   "mcpServers": {
     "FlightHunter": {
-      "command": "/Users/YOUR_USERNAME/.local/bin/flighthunter-mcp",
+      "command": "flighthunter-mcp",
       "args": []
     }
   }
 }
 ```
 
-### 6. Restart Claude Desktop
+### 3. Restart Claude Desktop
 
-Quit and reopen Claude Desktop. The FlightHunter tools will appear automatically.
-
+That's it! Just ask Claude to find flights.
 ---
 
 ## Usage
