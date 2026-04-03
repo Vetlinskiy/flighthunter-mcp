@@ -4,6 +4,12 @@ A Model Context Protocol (MCP) server that gives Claude the ability to search fo
 
 ---
 
+## Preview
+
+![Search example](images/screenshot1.png)
+
+---
+
 ## Features
 
 - 🔍 Search flights by specific date
@@ -14,9 +20,6 @@ A Model Context Protocol (MCP) server that gives Claude the ability to search fo
 - ⚡ Works inside Claude Desktop — just ask naturally
 
 ---
-## Preview
-
-![FlightHunter в Claude](images/screenshot1.png)
 
 ## Requirements
 
@@ -28,14 +31,39 @@ A Model Context Protocol (MCP) server that gives Claude the ability to search fo
 
 ## Installation
 
-### 1. Install FlightHunter via uv
+### 1. Install the base flight engine
+
 ```bash
-uv tool install flighthunter-mcp
+uv tool install git+https://github.com/punitarani/fli.git
 ```
 
-### 2. Configure Claude Desktop
+### 2. Install FlightHunter files
+
+Find your install path:
+
+```bash
+SITE=$(find ~/.local -path "*/site-packages/fli" -type d | head -1)
+echo $SITE
+```
+
+Download `fare_search.py` and `server.py` from this repo, then copy them:
+
+```bash
+cp fare_search.py "$SITE/search/fare_search.py"
+cp server.py "$SITE/mcp/server.py"
+```
+
+### 3. Install the FlightHunter launcher
+
+```bash
+cp flighthunter-mcp ~/.local/bin/flighthunter-mcp
+chmod +x ~/.local/bin/flighthunter-mcp
+```
+
+### 4. Configure Claude Desktop
 
 Open your Claude Desktop config:
+
 ```bash
 # macOS
 nano ~/Library/Application\ Support/Claude/claude_desktop_config.json
@@ -45,20 +73,24 @@ nano ~/.config/Claude/claude_desktop_config.json
 ```
 
 Add the following:
+
 ```json
 {
   "mcpServers": {
     "FlightHunter": {
-      "command": "flighthunter-mcp",
+      "command": "/Users/YOUR_USERNAME/.local/bin/flighthunter-mcp",
       "args": []
     }
   }
 }
 ```
 
-### 3. Restart Claude Desktop
+> **Tip:** Find the exact path by running `which flighthunter-mcp` in your terminal.
+
+### 5. Restart Claude Desktop
 
 That's it! Just ask Claude to find flights.
+
 ---
 
 ## Usage
@@ -106,10 +138,10 @@ Google Flights    Fare Search Engine
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `FLIGHTHUNTER_CURRENCY` | Currency code for results | `USD` |
-| `FLIGHTHUNTER_PASSENGERS` | Default passenger count | `1` |
-| `FLIGHTHUNTER_MAX_RESULTS` | Max results returned | unlimited |
-| `FLIGHTHUNTER_CABIN_CLASS` | Default cabin class | `ECONOMY` |
+| `FLI_MCP_DEFAULT_CURRENCY` | Currency code for results | `USD` |
+| `FLI_MCP_DEFAULT_PASSENGERS` | Default passenger count | `1` |
+| `FLI_MCP_MAX_RESULTS` | Max results returned | unlimited |
+| `FLI_MCP_DEFAULT_CABIN_CLASS` | Default cabin class | `ECONOMY` |
 
 Example:
 
@@ -120,8 +152,8 @@ Example:
       "command": "/Users/YOUR_USERNAME/.local/bin/flighthunter-mcp",
       "args": [],
       "env": {
-        "FLIGHTHUNTER_CURRENCY": "RUB",
-        "FLIGHTHUNTER_MAX_RESULTS": "20"
+        "FLI_MCP_DEFAULT_CURRENCY": "RUB",
+        "FLI_MCP_MAX_RESULTS": "10"
       }
     }
   }
@@ -129,18 +161,18 @@ Example:
 ```
 
 ---
- 
+
 ## Built on
- 
+
 FlightHunter is built on top of [fli](https://github.com/punitarani/fli) by [@punitarani](https://github.com/punitarani) — an excellent open-source MCP server for Google Flights search.
- 
+
 We extended it with:
 - 🇷🇺 Support for Russian and CIS airlines
 - 🔗 Direct booking links in search results
 - 🔀 Merged results from multiple flight data sources
- 
+
 A big thank you to the original author for the solid foundation! ⭐
- 
+
 ---
 
 ## License
