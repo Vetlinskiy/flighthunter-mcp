@@ -1,12 +1,8 @@
 {
   "mcpServers": {
-    "flight-search": {
-      "command": "/Users/YOUR_USERNAME/.local/bin/fli-mcp",
-      "args": [],
-      "env": {
-        "FARE_API_TOKEN": "your_token_here",
-        "AFFILIATE_MARKER": "your_marker_here"
-      }
+    "FlightHunter": {
+      "command": "/Users/YOUR_USERNAME/.local/bin/flighthunter-mcp",
+      "args": []
     }
   }
 }
