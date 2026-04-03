@@ -156,6 +156,19 @@ Example:
 ```
 
 ---
+ 
+## Built on
+ 
+FlightHunter is built on top of [fli](https://github.com/punitarani/fli) by [@punitarani](https://github.com/punitarani) — an excellent open-source MCP server for Google Flights search.
+ 
+We extended it with:
+- 🇷🇺 Support for Russian and CIS airlines
+- 🔗 Direct booking links in search results
+- 🔀 Merged results from multiple flight data sources
+ 
+A big thank you to the original author for the solid foundation! ⭐
+ 
+---
 
 ## License
 
