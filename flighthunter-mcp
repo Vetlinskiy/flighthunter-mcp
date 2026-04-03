@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/Users/sv/.local/share/uv/tools/flights/bin/python
 # -*- coding: utf-8 -*-
 """FlightHunter MCP — launcher script."""
 import sys
