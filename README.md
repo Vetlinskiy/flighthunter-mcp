@@ -4,13 +4,6 @@ A Model Context Protocol (MCP) server that gives Claude the ability to search fo
 
 ---
 
-## Preview
-
-
-![FlightHunter in Claude](images/screenshot1.png)
-
----
-
 ## Features
 
 - 🔍 Search flights by specific date
