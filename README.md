@@ -13,7 +13,7 @@ Built on top of [fli](https://github.com/punitarani/fli) with an extended fare s
 - 🇷🇺 Russian airlines included (Aeroflot, Pobeda, S7, NordStar, and more)
 - 🌍 Global routes via Google Flights
 - 💸 Direct booking links in results
-- ⚡ Works inside Claude Desktop
+- ⚡ Works inside Claude Desktop — just ask naturally
 
 ---
 
@@ -22,7 +22,6 @@ Built on top of [fli](https://github.com/punitarani/fli) with an extended fare s
 - macOS or Linux
 - [Claude Desktop](https://claude.ai/download)
 - [uv](https://docs.astral.sh/uv/getting-started/installation/) package manager
-- A free API token from [Travelpayouts](https://travelpayouts.com)
 
 ---
 
@@ -34,32 +33,23 @@ Built on top of [fli](https://github.com/punitarani/fli) with an extended fare s
 uv tool install flights
 ```
 
-### 2. Install the fare search extension
-
-Download `fare_search.py` from this repo and place it here:
+### 2. Find your fli install path
 
 ```bash
-# Find your fli install path
-SITE=$(uv tool run flights python -c "import fli; import os; print(os.path.dirname(fli.__file__))" 2>/dev/null || \
-  find ~/.local -path "*/site-packages/fli" -type d | head -1)
-
-# Copy fare_search.py into the fli search directory
-cp fare_search.py "$SITE/search/fare_search.py"
+SITE=$(find ~/.local -path "*/site-packages/fli" -type d | head -1)
+echo $SITE
 ```
 
-### 3. Replace `server.py`
+### 3. Install FlightHunter files
+
+Download `fare_search.py` and `server.py` from this repo, then:
 
 ```bash
+cp fare_search.py "$SITE/search/fare_search.py"
 cp server.py "$SITE/mcp/server.py"
 ```
 
-### 4. Get your API credentials
-
-1. Register at [travelpayouts.com](https://travelpayouts.com)
-2. Go to **API & Data → Data API** — copy your **Token**
-3. Go to **Programs → Aviasales** — copy your **Marker**
-
-### 5. Configure Claude Desktop
+### 4. Configure Claude Desktop
 
 Open your Claude Desktop config:
 
@@ -71,28 +61,24 @@ nano ~/Library/Application\ Support/Claude/claude_desktop_config.json
 nano ~/.config/Claude/claude_desktop_config.json
 ```
 
-Add the following (replace with your real credentials):
+Add the following (replace `YOUR_USERNAME` with your macOS username):
 
 ```json
 {
   "mcpServers": {
-    "flight-search": {
+    "FlightHunter": {
       "command": "/Users/YOUR_USERNAME/.local/bin/fli-mcp",
-      "args": [],
-      "env": {
-        "FARE_API_TOKEN": "your_token_here",
-        "AFFILIATE_MARKER": "your_marker_here"
-      }
+      "args": []
     }
   }
 }
 ```
 
-> **Note:** Find the exact path to `fli-mcp` by running `which fli-mcp` in your terminal.
+> **Tip:** Find the exact path to `fli-mcp` by running `which fli-mcp` in your terminal.
 
-### 6. Restart Claude Desktop
+### 5. Restart Claude Desktop
 
-Quit and reopen Claude Desktop. The flight search tools will appear automatically.
+Quit and reopen Claude Desktop. The FlightHunter tools will appear automatically.
 
 ---
 
@@ -112,20 +98,11 @@ Search for flights SVO → AYT on April 7
 What are the cheapest travel dates from LED to BCN in May?
 ```
 
-Claude will return results with prices and **direct booking links** where available.
+```
+Find round-trip flights from JFK to LHR next month
+```
 
----
-
-## Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `FARE_API_TOKEN` | Yes | API token from Travelpayouts |
-| `AFFILIATE_MARKER` | No | Your affiliate marker (enables booking links) |
-| `FLI_MCP_DEFAULT_CURRENCY` | No | Default currency code, e.g. `RUB` or `USD` |
-| `FLI_MCP_DEFAULT_PASSENGERS` | No | Default passenger count (default: `1`) |
-| `FLI_MCP_MAX_RESULTS` | No | Limit number of results returned |
-| `FLI_MCP_DEFAULT_CABIN_CLASS` | No | Default cabin class (default: `ECONOMY`) |
+Claude will return results sorted by price with direct booking links where available.
 
 ---
 
@@ -136,12 +113,42 @@ Claude
   ↓
 FlightHunter MCP Server
   ↓                ↓
-Google Flights    Fare Search Provider
+Google Flights    Fare Search Engine
 (global routes)   (domestic + CIS routes)
   ↓                ↓
   └──── merged, sorted by price ────┘
               ↓
     Results with booking links
+```
+
+---
+
+## Optional Configuration
+
+You can customize behavior via environment variables in your Claude config:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `FLI_MCP_DEFAULT_CURRENCY` | Currency code for results | `USD` |
+| `FLI_MCP_DEFAULT_PASSENGERS` | Default passenger count | `1` |
+| `FLI_MCP_MAX_RESULTS` | Max results returned | unlimited |
+| `FLI_MCP_DEFAULT_CABIN_CLASS` | Default cabin class | `ECONOMY` |
+
+Example:
+
+```json
+{
+  "mcpServers": {
+    "FlightHunter": {
+      "command": "/Users/YOUR_USERNAME/.local/bin/fli-mcp",
+      "args": [],
+      "env": {
+        "FLI_MCP_DEFAULT_CURRENCY": "RUB",
+        "FLI_MCP_MAX_RESULTS": "20"
+      }
+    }
+  }
+}
 ```
 
 ---
