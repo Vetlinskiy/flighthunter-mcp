@@ -6,18 +6,40 @@ from datetime import datetime
 
 _FARE_API_TOKEN = os.getenv("FARE_API_TOKEN", "8a6e17e30be4d6944e14869e891b5cd2")
 _AFFILIATE_MARKER = "715246"
+_AFFILIATE_TRS = "516093"
 _FARE_API_BASE = "https://api.travelpayouts.com/aviasales/v3"
+_PARTNER_LINKS_API = "https://tp.media/get-tp-link"
 
 
 def _build_booking_url(origin: str, destination: str, departure_date: str, passengers: int = 1) -> str:
-    """Generate a direct booking link for the given route."""
+    """Generate correct Travelpayouts affiliate link via Partner Links API."""
     try:
         dt = datetime.fromisoformat(departure_date[:10])
         date_str = dt.strftime("%d%m")
     except Exception:
         date_str = "0101"
 
-    return f"https://www.aviasales.ru/search/{origin}{date_str}{destination}{passengers}?marker={_AFFILIATE_MARKER}"
+    direct_url = f"https://www.aviasales.ru/search/{origin}{date_str}{destination}{passengers}"
+
+    try:
+        response = httpx.post(
+            _PARTNER_LINKS_API,
+            json={
+                "trs": _AFFILIATE_TRS,
+                "marker": _AFFILIATE_MARKER,
+                "shorten": False,
+                "links": [{"url": direct_url}]
+            },
+            timeout=5
+        )
+        data = response.json()
+        partner_url = data.get("result", {}).get("links", [{}])[0].get("partner_url")
+        if partner_url:
+            return partner_url
+    except Exception:
+        pass
+
+    return f"{direct_url}?marker={_AFFILIATE_MARKER}"
 
 
 class SearchFares:
