@@ -5,10 +5,10 @@ import httpx
 from datetime import datetime
 
 _FARE_API_TOKEN = os.getenv("FARE_API_TOKEN", "8a6e17e30be4d6944e14869e891b5cd2")
-_AFFILIATE_MARKER = "715246"
-_AFFILIATE_TRS = "516093"
+_AFFILIATE_MARKER = 715246
+_AFFILIATE_TRS = 516093
 _FARE_API_BASE = "https://api.travelpayouts.com/aviasales/v3"
-_PARTNER_LINKS_API = "https://tp.media/get-tp-link"
+_PARTNER_LINKS_API = "https://api.travelpayouts.com/links/v1/create"
 
 
 def _build_booking_url(origin: str, destination: str, departure_date: str, passengers: int = 1) -> str:
@@ -24,6 +24,7 @@ def _build_booking_url(origin: str, destination: str, departure_date: str, passe
     try:
         response = httpx.post(
             _PARTNER_LINKS_API,
+            headers={"X-Access-Token": _FARE_API_TOKEN},
             json={
                 "trs": _AFFILIATE_TRS,
                 "marker": _AFFILIATE_MARKER,
